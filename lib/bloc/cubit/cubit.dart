@@ -1,0 +1,57 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social/bloc/cubit/states.dart';
+import 'package:social/models/user_model.dart';
+import 'package:social/modules/chats/chats_screen.dart';
+import 'package:social/modules/feeds/feeds_screen.dart';
+import 'package:social/modules/settings/settings_screen.dart';
+import 'package:social/modules/users/users_screen.dart';
+import '../../shared/constant.dart';
+import '../../shared/icons.dart';
+
+class SocialCubit extends Cubit<SocialStates>{
+  SocialCubit():super(SocialInitialState());
+  static SocialCubit get(context)=>BlocProvider.of(context);
+  SocialUserModel? model;
+  void getUserData(){
+    emit(SocialGetUserLoadingState());
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    users.doc(uId).get().then((value) {
+      model=SocialUserModel.fromJson(value.data() as Map<String, dynamic>);
+      emit(SocialGetUserSuccessState());
+    }).catchError((error){
+      if (kDebugMode) {
+        print(error.toString());
+      }
+      emit(SocialGetUserErrorState(error.toString()));
+    });
+  }
+
+  int currentIndex=0;
+  List<Widget>screens=[
+    const FeedsScreen(),
+    const ChatsScreen(),
+    const UsersScreen(),
+    const SettingsScreen()
+  ];
+  List <String>titles=[
+    'Home',
+    'Chats',
+    'Users',
+    'Settings'
+  ];
+  void changeBottomNav(int index)
+  {
+    currentIndex=index;
+    emit(SocialChangeNavBarState());
+  }
+  List<BottomNavigationBarItem>bottomItems=[
+    const BottomNavigationBarItem(icon: Icon(IconBroken.home),label: 'Home'),
+    const BottomNavigationBarItem(icon: Icon(IconBroken.chat),label: 'Chats'),
+    const BottomNavigationBarItem(icon: Icon(IconBroken.location),label: 'Users'),
+    const BottomNavigationBarItem(icon: Icon(IconBroken.setting),label: 'Settings'),
+  ];
+}
+

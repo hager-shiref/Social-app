@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/modules/register_screen/cubit/states.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,12 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
-      // ignore: avoid_print
-      print(value.user!.email);
-      userCreate(email: email, name: name, phone: phone, uId: value.user!.uid);
+      userCreate(email: email, name: name, phone: phone, uId: value.user!.uid,isEmailVerified: false);
     }).catchError((error) {
       emit(SocialRegisterErrorState(error.toString()));
-      print(error.toString());
+      if (kDebugMode) {
+        print(error.toString());
+      }
     });
   }
 
@@ -31,9 +32,10 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
       {required String email,
       required String name,
       required String phone,
-      required String uId}) {
+      required String uId,
+      required bool isEmailVerified}) {
     SocialUserModel model =
-        SocialUserModel(email: email, name: name, phone: phone, uId: uId);
+        SocialUserModel(email: email, name: name, phone: phone, uId: uId,isEmailVerified: isEmailVerified);
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
@@ -41,7 +43,9 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
         .then((value) {
       emit(SocialCreateUserSuccessState());
     }).catchError((error) {
-      print(error.toString());
+      if (kDebugMode) {
+        print(error.toString());
+      }
       emit(SocialCreateUserErrorState(error));
     });
   }

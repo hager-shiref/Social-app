@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social/layout/social_layout.dart';
+import 'package:social/network/local/cache_helper.dart';
 import '../../shared/component.dart';
 import '../../shared/constant.dart';
 import '../register_screen/register_screen.dart';
@@ -74,12 +76,10 @@ class SocialLoginScreen extends StatelessWidget {
                     defaultTextButton(
                         function: () {
                           if (formKey.currentState!.validate()) {
-                            print(emailController.text);
                             SocialLoginCubit.get(context).userLogin(
                                 email: emailController.text.trim(),
                                 password: passwordController.text.trim());
                           }
-                          print(emailController.text);
                         },
                         text: "Login"),
                     Row(
@@ -109,6 +109,12 @@ class SocialLoginScreen extends StatelessWidget {
       }, listener: (context, state) {
         if (state is SocialLoginErrorState) {
           showToast(txt: state.error);
+        }
+        if(state is SocialLoginSuccessState){
+          CacheHelper.saveData(key: 'uId' ,
+              value: state.uId).then((value) {
+                navigateAndFinish(context,const SocialLayout());
+          });
         }
       }),
     );
