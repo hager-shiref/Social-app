@@ -22,5 +22,10 @@ ThemeData lightTheme = ThemeData(
         elevation: 20.0),
     textTheme: const TextTheme(
         bodyText1: TextStyle(
-            fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black)),
+            fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black),
+        subtitle1: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+            height: 1.3)),
     fontFamily: "Archivo");

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/bloc/cubit/cubit.dart';
+import 'package:social/modules/new_post/new_post.dart';
+import 'package:social/shared/component.dart';
 import 'package:social/shared/icons.dart';
 import '../bloc/cubit/states.dart';
 
@@ -12,7 +14,11 @@ class SocialLayout extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context)=>SocialCubit(),
       child: BlocConsumer<SocialCubit,SocialStates>(
-        listener: (context,state){},
+        listener: (context,state){
+          if(state is SocialNewPostState){
+            navigateTo(context,const NewPostScreen());
+          }
+        },
         builder: (context,state){
           var cubit=SocialCubit.get(context);
           return Scaffold(

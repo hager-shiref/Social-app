@@ -6,6 +6,7 @@ import 'package:social/bloc/cubit/states.dart';
 import 'package:social/models/user_model.dart';
 import 'package:social/modules/chats/chats_screen.dart';
 import 'package:social/modules/feeds/feeds_screen.dart';
+import 'package:social/modules/new_post/new_post.dart';
 import 'package:social/modules/settings/settings_screen.dart';
 import 'package:social/modules/users/users_screen.dart';
 import '../../shared/constant.dart';
@@ -33,23 +34,30 @@ class SocialCubit extends Cubit<SocialStates>{
   List<Widget>screens=[
     const FeedsScreen(),
     const ChatsScreen(),
+    const NewPostScreen(),
     const UsersScreen(),
     const SettingsScreen()
   ];
   List <String>titles=[
     'Home',
     'Chats',
+    'New post'
     'Users',
     'Settings'
   ];
   void changeBottomNav(int index)
   {
-    currentIndex=index;
-    emit(SocialChangeNavBarState());
+    if(index==2){
+      emit(SocialNewPostState());
+    }
+    else {
+      currentIndex=index;
+      emit(SocialChangeNavBarState());}
   }
   List<BottomNavigationBarItem>bottomItems=[
     const BottomNavigationBarItem(icon: Icon(IconBroken.home),label: 'Home'),
     const BottomNavigationBarItem(icon: Icon(IconBroken.chat),label: 'Chats'),
+    const BottomNavigationBarItem(icon: Icon(IconBroken.upload),label: 'Post'),
     const BottomNavigationBarItem(icon: Icon(IconBroken.location),label: 'Users'),
     const BottomNavigationBarItem(icon: Icon(IconBroken.setting),label: 'Settings'),
   ];
