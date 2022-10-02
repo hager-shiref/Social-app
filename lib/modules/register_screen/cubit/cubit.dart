@@ -35,7 +35,9 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
       required String uId,
       required bool isEmailVerified}) {
     SocialUserModel model =
-        SocialUserModel(email: email, name: name, phone: phone, uId: uId,isEmailVerified: isEmailVerified);
+        SocialUserModel(email: email, name: name, phone: phone, uId: uId,isEmailVerified: isEmailVerified,image: '',
+        bio:'Write your bio .. ',
+        cover: 'https://img.freepik.com/free-vector/hand-drawn-floral-background-with-copy-space_79603-1942.jpg?w=996&t=st=1661885531~exp=1661886131~hmac=db2e0ff5ee2ac07c5098fa1609d8b157c5c9f78618e7a291540d194fbff59b26');
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)

@@ -19,6 +19,7 @@ void main() async {
   await CacheHelper.init();
   Widget widget;
   uId = CacheHelper.getData(key: 'uId');
+  print("uid => ${uId}");
   if (uId != null) {
     widget = const SocialLayout();
   } else {
@@ -38,7 +39,9 @@ class SocialApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => SocialCubit()..getUserData)
+          BlocProvider(
+            create: (context) => SocialCubit()..getUserData(),
+          ),
         ],
         child: MaterialApp(
           theme: lightTheme,

@@ -51,11 +51,11 @@ Widget defaultTextButton({
   required String text,
 }) =>
     Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 15),
       child: ElevatedButton(
           style: TextButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            primary: Colors.white,
+            foregroundColor: Colors.white,
             textStyle: const TextStyle(fontSize: 15),
           ),
           onPressed: () {
