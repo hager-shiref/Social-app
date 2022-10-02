@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:social/shared/icons.dart';
 
 Widget defaultFormField({
   required TextEditingController controller,
@@ -81,7 +82,7 @@ void navigateAndFinish(context, widget) => Navigator.pushAndRemoveUntil(
       builder: (context) => widget,
     ),
     (Route<dynamic> route) => false);
-
+//=======================================================================================================================================================
 void showToast({required String txt}) {
   Fluttertoast.showToast(
       msg: txt,
@@ -90,4 +91,20 @@ void showToast({required String txt}) {
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
       fontSize: 16.0);
+}
+//=======================================================================================================================================================
+
+PreferredSizeWidget defaultAppBar(
+    {required BuildContext context,
+    required String title,
+    List<Widget>? actions}) {
+  return AppBar(
+      actions: actions,
+      title: Text(title),
+      leading: IconButton(
+        icon: const Icon(IconBroken.arrowLeft2),
+        onPressed: (() {
+          Navigator.pop(context);
+        }),
+      ));
 }

@@ -1,16 +1,24 @@
+abstract class SocialStates {}
 
-abstract class SocialStates{}
+class SocialInitialState extends SocialStates {}
 
-class SocialInitialState extends SocialStates{}
+class SocialGetUserLoadingState extends SocialStates {}
 
-class SocialGetUserLoadingState extends SocialStates{}
+class SocialGetUserSuccessState extends SocialStates {}
 
-class SocialGetUserSuccessState extends SocialStates{}
-
-class SocialGetUserErrorState extends SocialStates{
+class SocialGetUserErrorState extends SocialStates {
   final String error;
   SocialGetUserErrorState(this.error);
 }
 
-class SocialChangeNavBarState extends SocialStates{}
-class SocialNewPostState extends SocialStates{}
+class SocialChangeNavBarState extends SocialStates {}
+
+class SocialNewPostState extends SocialStates {}
+
+class SocialProfileImagePickedSuccessState extends SocialStates {}
+
+class SocialProfileImagePickedErrorState extends SocialStates {}
+
+class SocialCoverImagePickedSuccessState extends SocialStates {}
+
+class SocialCoverImagePickedErrorState extends SocialStates {}

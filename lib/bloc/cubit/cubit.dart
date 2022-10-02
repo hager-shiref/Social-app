@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/bloc/cubit/states.dart';
@@ -21,10 +25,11 @@ class SocialCubit extends Cubit<SocialStates> {
 
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
       userModel = SocialUserModel.fromJson(value.data());
-      print(value.data());
       emit(SocialGetUserSuccessState());
     }).catchError((error) {
-      print("ERRRRRORRRRRRR + ${error.toString()}");
+      if (kDebugMode) {
+        print("ERRRRRORRRRRRR + ${error.toString()}");
+      }
       emit(SocialGetUserErrorState(error.toString()));
     });
   }
@@ -56,4 +61,33 @@ class SocialCubit extends Cubit<SocialStates> {
     const BottomNavigationBarItem(
         icon: Icon(IconBroken.setting), label: 'Settings'),
   ];
+  File? profileImage;
+  var picker = ImagePicker();
+  Future<void> getProfileImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      profileImage = File(pickedFile.path);
+      emit(SocialProfileImagePickedSuccessState());
+    } else {
+      if (kDebugMode) {
+        print('No image selected.');
+      }
+      emit(SocialProfileImagePickedErrorState());
+    }
+  }
+
+  File? coverImage;
+  var coverPicker = ImagePicker();
+  Future<void> getCoverImage() async {
+    final pickedFile = await coverPicker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      coverImage = File(pickedFile.path);
+      emit(SocialCoverImagePickedSuccessState());
+    } else {
+      if (kDebugMode) {
+        print('No image selected.');
+      }
+      emit(SocialCoverImagePickedErrorState());
+    }
+  }
 }
