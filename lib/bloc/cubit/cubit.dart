@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,6 +13,7 @@ import 'package:social/modules/settings/settings_screen.dart';
 import 'package:social/modules/users/users_screen.dart';
 import '../../shared/constant.dart';
 import '../../shared/icons.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
@@ -89,5 +89,17 @@ class SocialCubit extends Cubit<SocialStates> {
       }
       emit(SocialCoverImagePickedErrorState());
     }
+  }
+
+  void uploadProfileImage() {
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
+        .putFile(profileImage!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value) {
+        print(value);
+      });
+    }).catchError((onError) {});
   }
 }

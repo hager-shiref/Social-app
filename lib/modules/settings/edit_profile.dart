@@ -17,7 +17,9 @@ class EditProfile extends StatelessWidget {
       appBar: defaultAppBar(context: context, title: "Edit Profile", actions: [
         Center(
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              SocialCubit.get(context).uploadProfileImage();
+            },
             child: const Text(
               "Update",
               style: TextStyle(color: Colors.blue),
