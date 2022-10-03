@@ -55,14 +55,14 @@ Widget defaultTextButton({
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: ElevatedButton(
           style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
             foregroundColor: Colors.white,
             textStyle: const TextStyle(fontSize: 15),
           ),
           onPressed: () {
             function();
           },
-          child: Text(text.toUpperCase())),
+          child: Text(text)),
     );
 
 //=======================================================================================================================================================

@@ -32,3 +32,5 @@ class SocialUpdateCoverImageSuccessState extends SocialStates {}
 class SocialUpdateCoverImageErrorState extends SocialStates {}
 
 class SocialUpdateErrorState extends SocialStates {}
+
+class SocialUpdateLoadingState extends SocialStates {}

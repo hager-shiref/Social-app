@@ -119,6 +119,45 @@ class EditProfile extends StatelessWidget {
                   ],
                 ),
               ),
+              if (SocialCubit.get(context).profileImage != null ||
+                  SocialCubit.get(context).coverImage != null)
+                Row(
+                  children: [
+                    if (SocialCubit.get(context).profileImage != null)
+                      Expanded(
+                          child: Column(
+                        children: [
+                          defaultTextButton(
+                              function: () {
+                                SocialCubit.get(context).uploadProfileImage(
+                                    name: name.text,
+                                    phone: phone.text,
+                                    bio: bio.text);
+                              },
+                              text: "Update image"),
+                          //const LinearProgressIndicator(),
+                        ],
+                      )),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    if (SocialCubit.get(context).coverImage != null)
+                      Expanded(
+                          child: Column(
+                        children: [
+                          defaultTextButton(
+                              function: () {
+                                SocialCubit.get(context).uploadCoverImage(
+                                    name: name.text,
+                                    phone: phone.text,
+                                    bio: bio.text);
+                              },
+                              text: "Update cover"),
+                          //const LinearProgressIndicator()
+                        ],
+                      )),
+                  ],
+                ),
               defaultFormField(
                   controller: name,
                   type: TextInputType.name,
