@@ -18,6 +18,8 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
   static SocialCubit get(context) => BlocProvider.of(context);
+  //=======================================================================================================================================================
+  //getUser
   SocialUserModel? userModel;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   void getUserData() {
@@ -33,6 +35,8 @@ class SocialCubit extends Cubit<SocialStates> {
       emit(SocialGetUserErrorState(error.toString()));
     });
   }
+//=======================================================================================================================================================
+  //NavBar
 
   int currentIndex = 0;
   List<Widget> screens = [
@@ -61,6 +65,10 @@ class SocialCubit extends Cubit<SocialStates> {
     const BottomNavigationBarItem(
         icon: Icon(IconBroken.setting), label: 'Settings'),
   ];
+
+  //=======================================================================================================================================================
+  //pick image
+
   File? profileImage;
   var picker = ImagePicker();
   Future<void> getProfileImage() async {
@@ -75,6 +83,8 @@ class SocialCubit extends Cubit<SocialStates> {
       emit(SocialProfileImagePickedErrorState());
     }
   }
+//=======================================================================================================================================================
+//pick profile
 
   File? coverImage;
   var coverPicker = ImagePicker();
@@ -90,16 +100,66 @@ class SocialCubit extends Cubit<SocialStates> {
       emit(SocialCoverImagePickedErrorState());
     }
   }
+//=======================================================================================================================================================
 
+  String profileImageUrl = '';
   void uploadProfileImage() {
     firebase_storage.FirebaseStorage.instance
         .ref()
-        .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
+        .child("users/${Uri.file(profileImage!.path).pathSegments.last}")
         .putFile(profileImage!)
         .then((value) {
       value.ref.getDownloadURL().then((value) {
-        print(value);
+        profileImageUrl = value;
+        emit(SocialUpdateProfileImageSuccessState());
+      }).catchError((error) {
+        emit(SocialUpdateProfileImageErrorState());
+        print("Error1 : ${error.toString()}");
       });
-    }).catchError((onError) {});
+    }).catchError((error) {
+      emit(SocialUpdateProfileImageErrorState());
+      print("Error2 : ${error.toString()}");
+    });
+  }
+//=======================================================================================================================================================
+
+  String coverImageUrl = '';
+  void uploadCoverImage() {
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child("users/${Uri.file(coverImage!.path).pathSegments.last}")
+        .putFile(coverImage!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value) {
+        coverImageUrl = value;
+        emit(SocialUpdateCoverImageSuccessState());
+      }).catchError((error) {
+        emit(SocialUpdateCoverImageErrorState());
+        print("Error1 : ${error.toString()}");
+      });
+    }).catchError((error) {
+      emit(SocialUpdateCoverImageErrorState());
+      print("Error2 : ${error.toString()}");
+    });
+  }
+//=======================================================================================================================================================
+
+  void updateUser(
+      {required String name, required String phone, required String bio}) {
+    SocialUserModel model = SocialUserModel(
+        name: name,
+        phone: phone,
+        image: profileImageUrl,
+        bio: 'Write your bio .. ',
+        cover: coverImageUrl);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .update(model.toMap())
+        .then((value) {
+      getUserData();
+    }).catchError((error) {
+      emit(SocialUpdateErrorState());
+    });
   }
 }

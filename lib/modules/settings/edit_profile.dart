@@ -9,6 +9,7 @@ class EditProfile extends StatelessWidget {
   EditProfile({super.key});
 
   var name = TextEditingController();
+  var phone = TextEditingController();
   var bio = TextEditingController();
 
   @override
@@ -18,7 +19,8 @@ class EditProfile extends StatelessWidget {
         Center(
           child: InkWell(
             onTap: () {
-              SocialCubit.get(context).uploadProfileImage();
+              SocialCubit.get(context).updateUser(
+                  name: name.text, phone: phone.text, bio: bio.text);
             },
             child: const Text(
               "Update",
@@ -38,6 +40,7 @@ class EditProfile extends StatelessWidget {
           var coverImage = SocialCubit.get(context).coverImage;
           name.text = userModel!.name!;
           bio.text = userModel.bio!;
+          phone.text = userModel.phone!;
           return Column(
             children: [
               SizedBox(
@@ -141,7 +144,20 @@ class EditProfile extends StatelessWidget {
                     return null;
                   },
                   label: "bio",
-                  prefix: IconBroken.infoCircle)
+                  prefix: IconBroken.infoCircle),
+              defaultFormField(
+                  controller: phone,
+                  type: TextInputType.name,
+                  onTap: () {},
+                  onSubmit: () {},
+                  validate: (value) {
+                    if (value.isEmpty) {
+                      return "phone must not be empty";
+                    }
+                    return null;
+                  },
+                  label: "Phone",
+                  prefix: IconBroken.call),
             ],
           );
         }),
