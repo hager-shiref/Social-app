@@ -6,14 +6,23 @@ import 'package:social/shared/component.dart';
 import 'package:social/shared/icons.dart';
 
 class NewPostScreen extends StatelessWidget {
-  const NewPostScreen({Key? key}) : super(key: key);
-
+  NewPostScreen({Key? key}) : super(key: key);
+  var textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: defaultAppBar(context: context, title: "Create Post", actions: [
           InkWell(
-              onTap: () {},
+              onTap: () {
+                var now = DateTime.now();
+                if (SocialCubit.get(context).postImage == null) {
+                  SocialCubit.get(context).createPost(
+                      text: textController.text, dateTime: now.toString());
+                } else {
+                  SocialCubit.get(context).uploadPostImage(
+                      dateTime: now.toString(), text: textController.text);
+                }
+              },
               child: const Center(
                   child: Text("POST", style: TextStyle(color: Colors.blue)))),
           const SizedBox(
@@ -24,6 +33,7 @@ class NewPostScreen extends StatelessWidget {
           listener: (context, state) {},
           builder: (context, state) {
             var userModel = SocialCubit.get(context).userModel;
+            var postImage = SocialCubit.get(context).postImage;
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -56,18 +66,61 @@ class NewPostScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: TextFormField(
+                    controller: textController,
                     decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                        hintText: "What's on you mind ..",
+                        hintText: "What's on your mind ..",
                         border: InputBorder.none),
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                if (postImage != null)
+                  Stack(
+                    children: [
+                      Container(
+                        height: 140,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0)),
+                            image: DecorationImage(
+                                image: FileImage(postImage),
+                                fit: BoxFit.cover)),
+                      ),
+                      Align(
+                        alignment: AlignmentDirectional.topEnd,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          child: CircleAvatar(
+                              radius: 15,
+                              child: IconButton(
+                                onPressed: () {
+                                  SocialCubit.get(context).removePostImage();
+                                },
+                                icon: const Icon(
+                                  Icons.close,
+                                  size: 16,
+                                ),
+                              )),
+                        ),
+                      )
+                    ],
+                  ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            SocialCubit.get(context).getPostImage();
+                          },
                           child: Row(
                             children: const [
                               Icon(IconBroken.image),
@@ -83,7 +136,7 @@ class NewPostScreen extends StatelessWidget {
                           onPressed: () {}, child: const Text(" # tags ")),
                     ),
                   ],
-                )
+                ),
               ],
             );
           },
