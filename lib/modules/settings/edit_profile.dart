@@ -41,163 +41,167 @@ class EditProfile extends StatelessWidget {
           name.text = userModel!.name!;
           bio.text = userModel.bio!;
           phone.text = userModel.phone!;
-          return Column(
-            children: [
-              SizedBox(
-                height: 180.0,
-                child: Stack(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  children: [
-                    Align(
-                        alignment: AlignmentDirectional.topCenter,
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: 140,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(4.0),
-                                      topRight: Radius.circular(4.0)),
-                                  image: DecorationImage(
-                                      image: coverImage == null
-                                          ? NetworkImage("${userModel.cover}")
-                                              as ImageProvider
-                                          : FileImage(coverImage),
-                                      fit: BoxFit.cover)),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional.topEnd,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 10),
-                                child: CircleAvatar(
-                                    radius: 15,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        SocialCubit.get(context)
-                                            .getCoverImage();
-                                      },
-                                      icon: const Icon(
-                                        IconBroken.camera,
-                                        size: 16,
-                                      ),
-                                    )),
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 180.0,
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      Align(
+                          alignment: AlignmentDirectional.topCenter,
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 140,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(4.0),
+                                        topRight: Radius.circular(4.0)),
+                                    image: DecorationImage(
+                                        image: coverImage == null
+                                            ? NetworkImage("${userModel.cover}")
+                                                as ImageProvider
+                                            : FileImage(coverImage),
+                                        fit: BoxFit.cover)),
                               ),
-                            )
+                              Align(
+                                alignment: AlignmentDirectional.topEnd,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 10),
+                                  child: CircleAvatar(
+                                      radius: 15,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          SocialCubit.get(context)
+                                              .getCoverImage();
+                                        },
+                                        icon: const Icon(
+                                          IconBroken.camera,
+                                          size: 16,
+                                        ),
+                                      )),
+                                ),
+                              )
+                            ],
+                          )),
+                      Stack(
+                        alignment: AlignmentDirectional.bottomCenter,
+                        children: [
+                          CircleAvatar(
+                              radius: 54.0,
+                              backgroundColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              child: CircleAvatar(
+                                  radius: 50.0,
+                                  backgroundImage: profileImage == null
+                                      ? NetworkImage("${userModel.image}")
+                                          as ImageProvider
+                                      : FileImage(profileImage))),
+                          Positioned(
+                              right: 5,
+                              bottom: 10,
+                              child: CircleAvatar(
+                                  radius: 15,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      SocialCubit.get(context)
+                                          .getProfileImage();
+                                    },
+                                    icon: const Icon(
+                                      IconBroken.camera,
+                                      size: 16,
+                                    ),
+                                  )))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                if (SocialCubit.get(context).profileImage != null ||
+                    SocialCubit.get(context).coverImage != null)
+                  Row(
+                    children: [
+                      if (SocialCubit.get(context).profileImage != null)
+                        Expanded(
+                            child: Column(
+                          children: [
+                            defaultTextButton(
+                                function: () {
+                                  SocialCubit.get(context).uploadProfileImage(
+                                      name: name.text,
+                                      phone: phone.text,
+                                      bio: bio.text);
+                                },
+                                text: "Update image"),
+                            if (state is SocialUpdateLoadingState)
+                              const LinearProgressIndicator(),
                           ],
                         )),
-                    Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
-                      children: [
-                        CircleAvatar(
-                            radius: 54.0,
-                            backgroundColor:
-                                Theme.of(context).scaffoldBackgroundColor,
-                            child: CircleAvatar(
-                                radius: 50.0,
-                                backgroundImage: profileImage == null
-                                    ? NetworkImage("${userModel.image}")
-                                        as ImageProvider
-                                    : FileImage(profileImage))),
-                        Positioned(
-                            right: 5,
-                            bottom: 10,
-                            child: CircleAvatar(
-                                radius: 15,
-                                child: IconButton(
-                                  onPressed: () {
-                                    SocialCubit.get(context).getProfileImage();
-                                  },
-                                  icon: const Icon(
-                                    IconBroken.camera,
-                                    size: 16,
-                                  ),
-                                )))
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              if (SocialCubit.get(context).profileImage != null ||
-                  SocialCubit.get(context).coverImage != null)
-                Row(
-                  children: [
-                    if (SocialCubit.get(context).profileImage != null)
-                      Expanded(
-                          child: Column(
-                        children: [
-                          defaultTextButton(
-                              function: () {
-                                SocialCubit.get(context).uploadProfileImage(
-                                    name: name.text,
-                                    phone: phone.text,
-                                    bio: bio.text);
-                              },
-                              text: "Update image"),
-                          //const LinearProgressIndicator(),
-                        ],
-                      )),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    if (SocialCubit.get(context).coverImage != null)
-                      Expanded(
-                          child: Column(
-                        children: [
-                          defaultTextButton(
-                              function: () {
-                                SocialCubit.get(context).uploadCoverImage(
-                                    name: name.text,
-                                    phone: phone.text,
-                                    bio: bio.text);
-                              },
-                              text: "Update cover"),
-                          //const LinearProgressIndicator()
-                        ],
-                      )),
-                  ],
-                ),
-              defaultFormField(
-                  controller: name,
-                  type: TextInputType.name,
-                  onTap: () {},
-                  onSubmit: () {},
-                  validate: (value) {
-                    if (value.isEmpty) {
-                      return "name must not be empty";
-                    }
-                    return null;
-                  },
-                  label: "Name",
-                  prefix: IconBroken.user),
-              defaultFormField(
-                  controller: bio,
-                  type: TextInputType.multiline,
-                  onTap: () {},
-                  onSubmit: () {},
-                  validate: (value) {
-                    if (value.isEmpty) {
-                      return "bio must not be empty";
-                    }
-                    return null;
-                  },
-                  label: "bio",
-                  prefix: IconBroken.infoCircle),
-              defaultFormField(
-                  controller: phone,
-                  type: TextInputType.name,
-                  onTap: () {},
-                  onSubmit: () {},
-                  validate: (value) {
-                    if (value.isEmpty) {
-                      return "phone must not be empty";
-                    }
-                    return null;
-                  },
-                  label: "Phone",
-                  prefix: IconBroken.call),
-            ],
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      if (SocialCubit.get(context).coverImage != null)
+                        Expanded(
+                            child: Column(
+                          children: [
+                            defaultTextButton(
+                                function: () {
+                                  SocialCubit.get(context).uploadCoverImage(
+                                      name: name.text,
+                                      phone: phone.text,
+                                      bio: bio.text);
+                                },
+                                text: "Update cover"),
+                            //const LinearProgressIndicator()
+                          ],
+                        )),
+                    ],
+                  ),
+                defaultFormField(
+                    controller: name,
+                    type: TextInputType.name,
+                    onTap: () {},
+                    onSubmit: () {},
+                    validate: (value) {
+                      if (value.isEmpty) {
+                        return "name must not be empty";
+                      }
+                      return null;
+                    },
+                    label: "Name",
+                    prefix: IconBroken.user),
+                defaultFormField(
+                    controller: bio,
+                    type: TextInputType.name,
+                    onTap: () {},
+                    onSubmit: () {},
+                    validate: (value) {
+                      if (value.isEmpty) {
+                        return "bio must not be empty";
+                      }
+                      return null;
+                    },
+                    label: "bio",
+                    prefix: IconBroken.infoCircle),
+                defaultFormField(
+                    controller: phone,
+                    type: TextInputType.name,
+                    onTap: () {},
+                    onSubmit: () {},
+                    validate: (value) {
+                      if (value.isEmpty) {
+                        return "phone must not be empty";
+                      }
+                      return null;
+                    },
+                    label: "Phone",
+                    prefix: IconBroken.call),
+              ],
+            ),
           );
         }),
       ),

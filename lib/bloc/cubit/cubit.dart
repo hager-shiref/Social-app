@@ -114,7 +114,7 @@ class SocialCubit extends Cubit<SocialStates> {
         .putFile(profileImage!)
         .then((value) {
       value.ref.getDownloadURL().then((value) {
-        emit(SocialUpdateProfileImageSuccessState());
+        //emit(SocialUpdateProfileImageSuccessState());
         updateUser(name: name, phone: phone, bio: bio, image: value);
       }).catchError((error) {
         emit(SocialUpdateProfileImageErrorState());
@@ -139,7 +139,7 @@ class SocialCubit extends Cubit<SocialStates> {
         .putFile(coverImage!)
         .then((value) {
       value.ref.getDownloadURL().then((value) {
-        emit(SocialUpdateCoverImageSuccessState());
+        //emit(SocialUpdateCoverImageSuccessState());
         updateUser(name: name, phone: phone, bio: bio, cover: value);
       }).catchError((error) {
         emit(SocialUpdateCoverImageErrorState());
@@ -166,7 +166,7 @@ class SocialCubit extends Cubit<SocialStates> {
         isEmailVerified: userModel!.isEmailVerified,
         uId: userModel!.uId,
         image: image ?? userModel!.image,
-        bio: 'Write your bio .. ',
+        bio: bio,
         cover: cover ?? userModel!.cover);
     FirebaseFirestore.instance
         .collection('users')

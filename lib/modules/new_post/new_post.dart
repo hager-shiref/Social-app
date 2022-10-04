@@ -6,6 +6,17 @@ class NewPostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: defaultAppBar(context: context, title: "Add Post"));
+    return Scaffold(
+      appBar: defaultAppBar(context: context, title: "Create Post", actions: [
+        InkWell(
+            onTap: () {},
+            child: const Center(
+                child: Text("POST", style: TextStyle(color: Colors.blue)))),
+        const SizedBox(
+          width: 20,
+        )
+      ]),
+      body: Column(children: []),
+    );
   }
 }
