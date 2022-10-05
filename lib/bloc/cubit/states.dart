@@ -76,3 +76,12 @@ class SocialGetLikesErrorState extends SocialStates {
   final String error;
   SocialGetLikesErrorState(this.error);
 }
+
+//for comments
+
+class SocialGetCommentsSuccessState extends SocialStates {}
+
+class SocialGetCommentsErrorState extends SocialStates {
+  final String error;
+  SocialGetCommentsErrorState(this.error);
+}

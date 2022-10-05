@@ -41,7 +41,7 @@ class SocialCubit extends Cubit<SocialStates> {
 
   int currentIndex = 0;
   List<Widget> screens = [
-    const FeedsScreen(),
+    FeedsScreen(),
     const ChatsScreen(),
     NewPostScreen(),
     const UsersScreen(),
@@ -225,7 +225,7 @@ class SocialCubit extends Cubit<SocialStates> {
         name: userModel!.name,
         uId: userModel!.uId,
         postImage: postImage ?? '');
-
+    // .add = .set but with dynamic id
     FirebaseFirestore.instance
         .collection('posts')
         .add(postModel.toMap())
@@ -245,6 +245,7 @@ class SocialCubit extends Cubit<SocialStates> {
   List<PostModel> posts = [];
   List<String> postsId = [];
   List<int> likes = [];
+  List<String> comments = [];
   void getPosts() {
     emit(SocialGetPostsLoadingState());
     //to get all docs in posts collection
@@ -252,10 +253,13 @@ class SocialCubit extends Cubit<SocialStates> {
       //to get all posts data and store it in posts list
       for (var element in value.docs) {
         element.reference.collection('likes').get().then((value) {
+          comments.add(value.docs.length.toString());
           likes.add(value.docs.length);
           postsId.add(element.id);
           posts.add(PostModel.fromJson(element.data()));
-        }).catchError((error) {});
+        }).catchError((error) {
+          emit(SocialGetPostsErrorState(error.toString()));
+        });
       }
       emit(SocialGetPostsSuccessState());
     }).catchError((error) {
@@ -273,6 +277,20 @@ class SocialCubit extends Cubit<SocialStates> {
       emit(SocialGetLikesSuccessState());
     }).catchError((error) {
       emit(SocialGetLikesErrorState(error.toString()));
+    });
+  }
+
+  void writeComment({required String postId, required String comment}) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(userModel!.uId)
+        .set({'comment': comment}).then((value) {
+      emit(SocialGetCommentsSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(SocialGetCommentsErrorState(error.toString()));
     });
   }
 }

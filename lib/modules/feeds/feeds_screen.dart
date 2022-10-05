@@ -8,8 +8,8 @@ import '../../models/post_model.dart';
 import '../../shared/constant.dart';
 
 class FeedsScreen extends StatelessWidget {
-  const FeedsScreen({Key? key}) : super(key: key);
-
+  FeedsScreen({Key? key}) : super(key: key);
+  var commentController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
@@ -249,7 +249,7 @@ class FeedsScreen extends StatelessWidget {
                               width: 5,
                             ),
                             Text(
-                              '120 comment',
+                              '${SocialCubit.get(context).comments.length} comment',
                               style: Theme.of(context).textTheme.caption,
                             )
                           ],
@@ -273,26 +273,35 @@ class FeedsScreen extends StatelessWidget {
                       radius: 20.0,
                       backgroundImage: NetworkImage(
                           "${SocialCubit.get(context).userModel!.image}")),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Write a comment ..',
-                            style: Theme.of(context).textTheme.caption,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 160,
+                          child: TextFormField(
+                            controller: commentController,
+                            decoration: const InputDecoration(
+                                hintText: 'Write a comment ..',
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 5),
+                                border: InputBorder.none),
                           ),
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    width: 100.0,
-                  ),
+                  IconButton(
+                      onPressed: () {
+                        SocialCubit.get(context).writeComment(
+                            postId: SocialCubit.get(context).postsId[index],
+                            comment: commentController.text);
+                        commentController.clear();
+                      },
+                      icon: const Icon(
+                        IconBroken.send,
+                        size: 16,
+                      )),
                   IconButton(
                     onPressed: () {
                       SocialCubit.get(context).likePost(
@@ -307,9 +316,6 @@ class FeedsScreen extends StatelessWidget {
                   Text(
                     'Like',
                     style: Theme.of(context).textTheme.caption,
-                  ),
-                  const SizedBox(
-                    width: 20,
                   ),
                 ],
               ),
