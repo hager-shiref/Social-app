@@ -16,7 +16,7 @@ class FeedsScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var posts = SocialCubit.get(context).posts;
-        return posts.length > 0
+        return posts.isNotEmpty && SocialCubit.get(context).userModel != null
             ? SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(
@@ -52,7 +52,7 @@ class FeedsScreen extends StatelessWidget {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) =>
-                          buildPostItem(posts[index], context),
+                          buildPostItem(posts[index], context, index),
                       separatorBuilder: (context, index) => const SizedBox(
                         height: 10.0,
                       ),
@@ -69,7 +69,7 @@ class FeedsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildPostItem(PostModel model, context) => Card(
+  Widget buildPostItem(PostModel model, context, index) => Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: 5.0,
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -224,7 +224,7 @@ class FeedsScreen extends StatelessWidget {
                               width: 5,
                             ),
                             Text(
-                              '120',
+                              SocialCubit.get(context).likes[index].toString(),
                               style: Theme.of(context).textTheme.caption,
                             )
                           ],
@@ -291,15 +291,18 @@ class FeedsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    width: 70.0,
+                    width: 100.0,
                   ),
-                  const Icon(
-                    IconBroken.heart,
-                    color: Colors.red,
-                    size: 16.0,
-                  ),
-                  const SizedBox(
-                    width: 5,
+                  IconButton(
+                    onPressed: () {
+                      SocialCubit.get(context).likePost(
+                          postId: SocialCubit.get(context).postsId[index]);
+                    },
+                    icon: const Icon(
+                      IconBroken.heart,
+                      color: Colors.red,
+                      size: 16.0,
+                    ),
                   ),
                   Text(
                     'Like',
@@ -307,21 +310,6 @@ class FeedsScreen extends StatelessWidget {
                   ),
                   const SizedBox(
                     width: 20,
-                  ),
-                  const Icon(
-                    Icons.share,
-                    color: Colors.green,
-                    size: 16.0,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    'Share',
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption!
-                        .copyWith(fontSize: 10),
                   ),
                 ],
               ),

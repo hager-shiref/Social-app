@@ -67,3 +67,12 @@ class SocialGetPostsErrorState extends SocialStates {
   final String error;
   SocialGetPostsErrorState(this.error);
 }
+
+//for likes
+
+class SocialGetLikesSuccessState extends SocialStates {}
+
+class SocialGetLikesErrorState extends SocialStates {
+  final String error;
+  SocialGetLikesErrorState(this.error);
+}

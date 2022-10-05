@@ -243,18 +243,36 @@ class SocialCubit extends Cubit<SocialStates> {
   //=======================================================================================================================================================
 
   List<PostModel> posts = [];
-
+  List<String> postsId = [];
+  List<int> likes = [];
   void getPosts() {
     emit(SocialGetPostsLoadingState());
     //to get all docs in posts collection
     FirebaseFirestore.instance.collection('posts').get().then((value) {
       //to get all posts data and store it in posts list
       for (var element in value.docs) {
-        posts.add(PostModel.fromJson(element.data()));
+        element.reference.collection('likes').get().then((value) {
+          likes.add(value.docs.length);
+          postsId.add(element.id);
+          posts.add(PostModel.fromJson(element.data()));
+        }).catchError((error) {});
       }
       emit(SocialGetPostsSuccessState());
     }).catchError((error) {
       emit(SocialGetPostsErrorState(error.toString()));
+    });
+  }
+
+  void likePost({required String postId}) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(userModel!.uId)
+        .set({'like': true}).then((value) {
+      emit(SocialGetLikesSuccessState());
+    }).catchError((error) {
+      emit(SocialGetLikesErrorState(error.toString()));
     });
   }
 }
