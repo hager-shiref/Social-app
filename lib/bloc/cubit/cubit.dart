@@ -245,7 +245,7 @@ class SocialCubit extends Cubit<SocialStates> {
   List<PostModel> posts = [];
   List<String> postsId = [];
   List<int> likes = [];
-  List<String> comments = [];
+  List<int> comments = [];
   void getPosts() {
     emit(SocialGetPostsLoadingState());
     //to get all docs in posts collection
@@ -253,10 +253,27 @@ class SocialCubit extends Cubit<SocialStates> {
       //to get all posts data and store it in posts list
       for (var element in value.docs) {
         element.reference.collection('likes').get().then((value) {
-          comments.add(value.docs.length.toString());
           likes.add(value.docs.length);
           postsId.add(element.id);
           posts.add(PostModel.fromJson(element.data()));
+        }).catchError((error) {
+          emit(SocialGetPostsErrorState(error.toString()));
+        });
+      }
+      for (var element in value.docs) {
+        element.reference
+            .collection('comments')
+            .doc(userModel!.uId)
+            .collection('post comments')
+            .get()
+            .then((value) {
+          for (var element in value.docs) {
+            comments.add(value.docs.length);
+            //print("comments : ${comments.length}");
+          }
+          //comments.add(value.docs.length);
+          //print("comments:${comments.length}");
+          //print("comment value : ${value.docs.length}");
         }).catchError((error) {
           emit(SocialGetPostsErrorState(error.toString()));
         });
@@ -286,7 +303,8 @@ class SocialCubit extends Cubit<SocialStates> {
         .doc(postId)
         .collection('comments')
         .doc(userModel!.uId)
-        .set({'comment': comment}).then((value) {
+        .collection('post comments')
+        .add({'comment': comment}).then((value) {
       emit(SocialGetCommentsSuccessState());
     }).catchError((error) {
       print(error.toString());
