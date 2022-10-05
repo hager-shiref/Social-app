@@ -50,9 +50,20 @@ class SocialCreatePostErrorState extends SocialStates {
   SocialCreatePostErrorState(this.error);
 }
 
-//for get posts
+//for posts
 class SocialPostPickedSuccessState extends SocialStates {}
 
 class SocialPostPickedErrorState extends SocialStates {}
 
 class SocialRemovePostImageState extends SocialStates {}
+
+//for get posts
+
+class SocialGetPostsLoadingState extends SocialStates {}
+
+class SocialGetPostsSuccessState extends SocialStates {}
+
+class SocialGetPostsErrorState extends SocialStates {
+  final String error;
+  SocialGetPostsErrorState(this.error);
+}
