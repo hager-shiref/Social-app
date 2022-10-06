@@ -49,6 +49,7 @@ class SocialCubit extends Cubit<SocialStates> {
   ];
   List<String> titles = ['Home', 'Chats', 'New post', 'Users', 'Settings'];
   void changeBottomNav(int index) {
+    if (index == 1) getAllUsers();
     if (index == 2) {
       emit(SocialNewPostState());
     } else {
@@ -269,10 +270,10 @@ class SocialCubit extends Cubit<SocialStates> {
             .then((value) {
           for (var element in value.docs) {
             comments.add(value.docs.length);
-            //print("comments : ${comments.length}");
+            print("comments => ${comments.length}");
           }
           //comments.add(value.docs.length);
-          //print("comments:${comments.length}");
+          print("comments:${comments.length}");
           //print("comment value : ${value.docs.length}");
         }).catchError((error) {
           emit(SocialGetPostsErrorState(error.toString()));
@@ -310,5 +311,18 @@ class SocialCubit extends Cubit<SocialStates> {
       print(error.toString());
       emit(SocialGetCommentsErrorState(error.toString()));
     });
+  }
+
+  List<SocialUserModel> users = [];
+  void getAllUsers() {
+    if (users.isEmpty) {
+      FirebaseFirestore.instance.collection('users').get().then((value) {
+        for (var element in value.docs) {
+          if (element.data()['uId'] != userModel!.uId) {
+            users.add(SocialUserModel.fromJson(element.data()));
+          }
+        }
+      }).catchError((error) {});
+    }
   }
 }

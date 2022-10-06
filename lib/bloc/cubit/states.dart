@@ -85,3 +85,14 @@ class SocialGetCommentsErrorState extends SocialStates {
   final String error;
   SocialGetCommentsErrorState(this.error);
 }
+
+//get all users
+
+class SocialGetAllUsersLoadingState extends SocialStates {}
+
+class SocialGetAllUsersSuccessState extends SocialStates {}
+
+class SocialGetAllUsersErrorState extends SocialStates {
+  final String error;
+  SocialGetAllUsersErrorState(this.error);
+}

@@ -16,7 +16,8 @@ class FeedsScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var posts = SocialCubit.get(context).posts;
-        return posts.isNotEmpty && SocialCubit.get(context).userModel != null
+        return SocialCubit.get(context).posts.isNotEmpty &&
+                SocialCubit.get(context).userModel != null
             ? SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(
@@ -249,7 +250,7 @@ class FeedsScreen extends StatelessWidget {
                               width: 5,
                             ),
                             Text(
-                              '${SocialCubit.get(context).comments.length.toString()} comment',
+                              '${SocialCubit.get(context).comments.length} comment',
                               style: Theme.of(context).textTheme.caption,
                             )
                           ],
@@ -297,6 +298,7 @@ class FeedsScreen extends StatelessWidget {
                             postId: SocialCubit.get(context).postsId[index],
                             comment: commentController.text);
                         commentController.clear();
+                        SocialCubit.get(context).getPosts();
                       },
                       icon: const Icon(
                         IconBroken.send,
