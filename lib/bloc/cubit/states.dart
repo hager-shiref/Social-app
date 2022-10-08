@@ -96,3 +96,12 @@ class SocialGetAllUsersErrorState extends SocialStates {
   final String error;
   SocialGetAllUsersErrorState(this.error);
 }
+
+//send message
+
+class SocialSendMessageSuccessState extends SocialStates {}
+
+class SocialSendMessageErrorState extends SocialStates {
+  final String error;
+  SocialSendMessageErrorState(this.error);
+}
