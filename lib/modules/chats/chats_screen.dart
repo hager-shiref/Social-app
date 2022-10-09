@@ -13,10 +13,10 @@ class ChatsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
         builder: ((context, state) {
-          var model = SocialCubit.get(context).userModel;
+          var model = SocialCubit.get(context).users;
           return ListView.separated(
               itemBuilder: (context, index) {
-                return buildChatItem(model!, context);
+                return buildChatItem(model[index], context);
               },
               separatorBuilder: (context, index) {
                 return const Divider();
@@ -29,7 +29,7 @@ class ChatsScreen extends StatelessWidget {
   Widget buildChatItem(SocialUserModel model, BuildContext context) {
     return InkWell(
       onTap: () {
-        navigateTo(context, CharDetailsScreen(userModel: model));
+        navigateTo(context, ChatDetailsScreen(userModel: model));
       },
       child: Padding(
         padding: const EdgeInsets.all(20.0),

@@ -11,36 +11,46 @@ class SocialLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {
-        if (state is SocialNewPostState) {
-          navigateTo(context, NewPostScreen());
-        }
-      },
-      builder: (context, state) {
-        var cubit = SocialCubit.get(context);
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            title: Text(cubit.titles[cubit.currentIndex]),
-            shadowColor: Colors.white,
-            actions: [
-              IconButton(
-                  onPressed: () {}, icon: const Icon(IconBroken.notification)),
-              IconButton(onPressed: () {}, icon: const Icon(IconBroken.search))
-            ],
-          ),
-          body: cubit.screens[cubit.currentIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            onTap: (index) {
-              cubit.changeBottomNav(index);
-            },
-            currentIndex: cubit.currentIndex,
-            items: cubit.bottomItems,
-          ),
-        );
-      },
-    );
+    return Builder(builder: (context) {
+      SocialCubit.get(context).getUserData();
+      return BlocConsumer<SocialCubit, SocialStates>(
+        listener: (context, state) {
+          if (state is SocialNewPostState) {
+            navigateTo(context, NewPostScreen());
+          }
+        },
+        builder: (context, state) {
+          var cubit = SocialCubit.get(context);
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              title: Text(cubit.titles[cubit.currentIndex]),
+              shadowColor: Colors.white,
+              actions: [
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(IconBroken.notification)),
+                IconButton(
+                    onPressed: () {}, icon: const Icon(IconBroken.search)),
+                IconButton(
+                    onPressed: () {
+                      SocialCubit.get(context).signOut(context: context);
+                    },
+                    icon: const Icon(IconBroken.logout))
+              ],
+            ),
+            body: cubit.screens[cubit.currentIndex],
+            bottomNavigationBar: BottomNavigationBar(
+              onTap: (index) {
+                cubit.changeBottomNav(index);
+              },
+              currentIndex: cubit.currentIndex,
+              items: cubit.bottomItems,
+            ),
+          );
+        },
+      );
+    });
   }
 }
 /* email verification

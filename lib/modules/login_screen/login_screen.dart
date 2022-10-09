@@ -110,10 +110,9 @@ class SocialLoginScreen extends StatelessWidget {
         if (state is SocialLoginErrorState) {
           showToast(txt: state.error);
         }
-        if(state is SocialLoginSuccessState){
-          CacheHelper.saveData(key: 'uId' ,
-              value: state.uId).then((value) {
-                navigateAndFinish(context,const SocialLayout());
+        if (state is SocialLoginSuccessState) {
+          CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
+            navigateAndFinish(context, const SocialLayout());
           });
         }
       }),

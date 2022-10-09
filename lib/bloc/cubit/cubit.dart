@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:social/models/post_model.dart';
 import 'package:social/models/user_model.dart';
 import 'package:social/modules/chats/chats_screen.dart';
 import 'package:social/modules/feeds/feeds_screen.dart';
+import 'package:social/modules/login_screen/login_screen.dart';
 import 'package:social/modules/new_post/new_post.dart';
 import 'package:social/modules/settings/settings_screen.dart';
 import 'package:social/modules/users/users_screen.dart';
@@ -50,7 +52,7 @@ class SocialCubit extends Cubit<SocialStates> {
   ];
   List<String> titles = ['Home', 'Chats', 'New post', 'Users', 'Settings'];
   void changeBottomNav(int index) {
-    if (index == 1) getAllUsers();
+    if (index == 1) getUsers();
     if (index == 2) {
       emit(SocialNewPostState());
     } else {
@@ -315,16 +317,16 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   List<SocialUserModel> users = [];
-  void getAllUsers() {
+
+  void getUsers() {
     if (users.length == 0) {
       FirebaseFirestore.instance.collection('users').get().then((value) {
-        for (var element in value.docs) {
-          if (element.data()['uId'] != userModel!.uId) {
-            print(element.data());
+        value.docs.forEach((element) {
+          if (element.data()['uId'] != uId) {
             users.add(SocialUserModel.fromJson(element.data()));
-            emit(SocialGetAllUsersSuccessState());
           }
-        }
+        });
+        emit(SocialGetAllUsersSuccessState());
       }).catchError((error) {
         print(error.toString());
         emit(SocialGetAllUsersErrorState(error.toString()));
@@ -332,40 +334,77 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  void sendMessage(
-      {required String text,
-      required String reseiverId,
-      required String dateTime}) {
-    MessageModel messageModel = MessageModel(
-        dateTime: dateTime,
-        receiverId: reseiverId,
-        senderId: userModel!.uId,
-        text: text);
-    //set my chat
+  void sendMessage({
+    required String? receiverId,
+    required String? dateTime,
+    required String? text,
+  }) {
+    MessageModel model = MessageModel(
+      text: text,
+      senderId: userModel!.uId,
+      receiverId: receiverId,
+      dateTime: dateTime,
+    );
+    // set my chats
     FirebaseFirestore.instance
         .collection('users')
         .doc(userModel!.uId)
         .collection('chats')
-        .doc(reseiverId)
-        .collection('message')
-        .add(messageModel.toMap())
+        .doc(receiverId)
+        .collection('messages')
+        .add(model.toMap())
         .then((value) {
       emit(SocialSendMessageSuccessState());
     }).catchError((error) {
       emit(SocialSendMessageErrorState(error.toString()));
     });
-    // set receiver chat
+    // set receiver chats
     FirebaseFirestore.instance
         .collection('users')
-        .doc(reseiverId)
+        .doc(receiverId)
         .collection('chats')
         .doc(userModel!.uId)
-        .collection('message')
-        .add(messageModel.toMap())
+        .collection('messages')
+        .add(model.toMap())
         .then((value) {
       emit(SocialSendMessageSuccessState());
     }).catchError((error) {
       emit(SocialSendMessageErrorState(error.toString()));
+    });
+  }
+
+  List<MessageModel> messages = [];
+  void getMessages({
+    required String receiverId,
+  }) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      messages = [];
+
+      event.docs.forEach((element) {
+        messages.add(MessageModel.fromJson(element.data()));
+      });
+      emit(SocialGetMessageSuccessState());
+    });
+  }
+
+//=======================================================================================================================================================
+  void signOut({required BuildContext context}) {
+    FirebaseAuth.instance.signOut().then((value) {
+      //navigateTo(context, const SocialLoginScreen());
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const SocialLoginScreen()),
+          (route) => false);
+      emit(SocialUserSignOutSuccessState());
+    }).catchError((error) {
+      emit(SocialUserSignOutErrorState(error.toString()));
     });
   }
 }

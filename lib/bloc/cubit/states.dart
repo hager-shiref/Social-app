@@ -105,3 +105,16 @@ class SocialSendMessageErrorState extends SocialStates {
   final String error;
   SocialSendMessageErrorState(this.error);
 }
+
+//get message
+
+class SocialGetMessageSuccessState extends SocialStates {}
+
+//signOut
+
+class SocialUserSignOutSuccessState extends SocialStates {}
+
+class SocialUserSignOutErrorState extends SocialStates {
+  final String error;
+  SocialUserSignOutErrorState(this.error);
+}
