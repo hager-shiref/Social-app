@@ -47,7 +47,6 @@ class SocialCubit extends Cubit<SocialStates> {
     FeedsScreen(),
     const ChatsScreen(),
     NewPostScreen(),
-    const UsersScreen(),
     const SettingsScreen()
   ];
   List<String> titles = ['Home', 'Chats', 'New post', 'Users', 'Settings'];
@@ -64,9 +63,8 @@ class SocialCubit extends Cubit<SocialStates> {
   List<BottomNavigationBarItem> bottomItems = [
     const BottomNavigationBarItem(icon: Icon(IconBroken.home), label: 'Home'),
     const BottomNavigationBarItem(icon: Icon(IconBroken.chat), label: 'Chats'),
-    const BottomNavigationBarItem(icon: Icon(IconBroken.upload), label: 'Post'),
     const BottomNavigationBarItem(
-        icon: Icon(IconBroken.location), label: 'Users'),
+        icon: Icon(IconBroken.upload), label: ' New Post'),
     const BottomNavigationBarItem(
         icon: Icon(IconBroken.setting), label: 'Settings'),
   ];
