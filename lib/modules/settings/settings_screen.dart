@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/bloc/cubit/cubit.dart';
@@ -159,6 +160,28 @@ class SettingsScreen extends StatelessWidget {
                         navigateTo(context, EditProfile());
                       },
                       child: const Icon(IconBroken.edit))
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                      child: OutlinedButton(
+                          onPressed: () {
+                            FirebaseMessaging.instance
+                                .subscribeToTopic('announcements');
+                          },
+                          child: const Text("Subscribe"))),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: OutlinedButton(
+                        onPressed: () {
+                          FirebaseMessaging.instance
+                              .unsubscribeFromTopic('announcements');
+                        },
+                        child: const Text("Unsubscribe")),
+                  )
                 ],
               )
             ],

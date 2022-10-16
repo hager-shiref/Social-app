@@ -77,38 +77,41 @@ class NewPostScreen extends StatelessWidget {
                   height: 10,
                 ),
                 if (postImage != null)
-                  Stack(
-                    children: [
-                      Container(
-                        height: 140,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0)),
-                            image: DecorationImage(
-                                image: FileImage(postImage),
-                                fit: BoxFit.cover)),
-                      ),
-                      Align(
-                        alignment: AlignmentDirectional.topEnd,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          child: CircleAvatar(
-                              radius: 15,
-                              child: IconButton(
-                                onPressed: () {
-                                  SocialCubit.get(context).removePostImage();
-                                },
-                                icon: const Icon(
-                                  Icons.close,
-                                  size: 16,
-                                ),
-                              )),
+                  Expanded(
+                    flex: 2,
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: 140,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4.0),
+                                  topRight: Radius.circular(4.0)),
+                              image: DecorationImage(
+                                  image: FileImage(postImage),
+                                  fit: BoxFit.cover)),
                         ),
-                      )
-                    ],
+                        Align(
+                          alignment: AlignmentDirectional.topEnd,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            child: CircleAvatar(
+                                radius: 15,
+                                child: IconButton(
+                                  onPressed: () {
+                                    SocialCubit.get(context).removePostImage();
+                                  },
+                                  icon: const Icon(
+                                    Icons.close,
+                                    size: 16,
+                                  ),
+                                )),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 const SizedBox(
                   height: 10,

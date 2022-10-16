@@ -259,7 +259,7 @@ ocialCubit.get(context).posts.isNotEmpty &&
             ),
             if (model.postImage != '')
               Container(
-                height: 140,
+                height: 160,
                 width: double.infinity,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
