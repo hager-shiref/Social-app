@@ -15,7 +15,6 @@ import 'package:social/modules/feeds/feeds_screen.dart';
 import 'package:social/modules/login_screen/login_screen.dart';
 import 'package:social/modules/new_post/new_post.dart';
 import 'package:social/modules/settings/settings_screen.dart';
-import 'package:social/modules/users/users_screen.dart';
 import '../../shared/constant.dart';
 import '../../shared/icons.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;

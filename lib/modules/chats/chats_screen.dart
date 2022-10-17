@@ -11,19 +11,22 @@ class ChatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
-        builder: ((context, state) {
-          var model = SocialCubit.get(context).users;
-          return ListView.separated(
-              itemBuilder: (context, index) {
-                return buildChatItem(model[index], context);
-              },
-              separatorBuilder: (context, index) {
-                return const Divider();
-              },
-              itemCount: SocialCubit.get(context).users.length);
-        }),
-        listener: (context, state) {});
+    return Builder(builder: (context) {
+      var model = SocialCubit.get(context).users;
+      return BlocConsumer<SocialCubit, SocialStates>(
+          builder: ((context, state) {
+            //var model = SocialCubit.get(context).users;
+            return ListView.separated(
+                itemBuilder: (context, index) {
+                  return buildChatItem(model[index], context);
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider();
+                },
+                itemCount: SocialCubit.get(context).users.length);
+          }),
+          listener: (context, state) {});
+    });
   }
 
   Widget buildChatItem(SocialUserModel model, BuildContext context) {
