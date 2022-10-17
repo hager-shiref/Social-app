@@ -13,6 +13,8 @@ class SocialLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       SocialCubit.get(context).getUserData();
+      SocialCubit.get(context).users;
+
       return BlocConsumer<SocialCubit, SocialStates>(
         listener: (context, state) {
           if (state is SocialNewPostState) {
@@ -39,7 +41,11 @@ class SocialLayout extends StatelessWidget {
                     icon: const Icon(IconBroken.logout))
               ],
             ),
-            body: cubit.screens[cubit.currentIndex],
+            body: SocialCubit.get(context).connect == "none"
+                ? const Center(
+                    child: Text("Check your internet connection"),
+                  )
+                : cubit.screens[cubit.currentIndex],
             bottomNavigationBar: BottomNavigationBar(
               onTap: (index) {
                 cubit.changeBottomNav(index);

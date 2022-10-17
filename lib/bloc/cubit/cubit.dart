@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -361,7 +362,7 @@ class SocialCubit extends Cubit<SocialStates> {
         .collection('users')
         .doc(receiverId)
         .collection('chats')
-        .doc(userModel!.uId)
+        .doc(uId)
         .collection('messages')
         .add(model.toMap())
         .then((value) {
@@ -377,7 +378,7 @@ class SocialCubit extends Cubit<SocialStates> {
   }) {
     FirebaseFirestore.instance
         .collection('users')
-        .doc(userModel!.uId)
+        .doc(uId)
         .collection('chats')
         .doc(receiverId)
         .collection('messages')
@@ -400,9 +401,19 @@ class SocialCubit extends Cubit<SocialStates> {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const SocialLoginScreen()),
           (route) => false);
+      uId = '';
       emit(SocialUserSignOutSuccessState());
     }).catchError((error) {
       emit(SocialUserSignOutErrorState(error.toString()));
+    });
+  }
+
+//=======================================================================================================================================================
+  var connect;
+  void checkConnectivity() {
+    Connectivity().checkConnectivity().then((value) {
+      print("Value ==> ${value.name}");
+      connect = value.name;
     });
   }
 }

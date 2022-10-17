@@ -69,6 +69,7 @@ class SocialApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => SocialCubit()
+              ..checkConnectivity()
               ..getUserData()
               ..getPosts(),
           ),
