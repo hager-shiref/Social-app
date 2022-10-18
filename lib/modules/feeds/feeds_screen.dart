@@ -13,71 +13,70 @@ class FeedsScreen extends StatelessWidget {
   var commentController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        var posts = SocialCubit.get(context).posts;
-        return ConditionalBuilder(
-            condition: SocialCubit.get(context).posts.isNotEmpty &&
-                SocialCubit.get(context).userModel != null,
-            builder: (context) {
-              return SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    Card(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      elevation: 5.0,
-                      margin: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomEnd,
-                        children: [
-                          const Image(
-                            image: NetworkImage(
-                                'https://img.freepik.com/free-photo/young-attractive-woman-smiling-feeling-healthy-hair-flying-wind_176420-37515.jpg?w=996&t=st=1661797413~exp=1661798013~hmac=d0c888f7ea5f3db7dc216b14d714cf88d393ba1adf8a245109b4dd15167284a6'),
-                            fit: BoxFit.cover,
-                            height: 220.0,
-                            width: double.infinity,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Communicate with friends',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1!
-                                  .copyWith(color: Colors.white),
+    return Builder(builder: (context) {
+      SocialCubit.get(context).getUserData();
+      return BlocConsumer<SocialCubit, SocialStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          var posts = SocialCubit.get(context).posts;
+          return ConditionalBuilder(
+              condition: SocialCubit.get(context).posts.isNotEmpty &&
+                  SocialCubit.get(context).userModel != null,
+              builder: (context) {
+                return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        elevation: 5.0,
+                        margin: const EdgeInsets.all(8.0),
+                        child: Stack(
+                          alignment: AlignmentDirectional.bottomEnd,
+                          children: [
+                            const Image(
+                              image: NetworkImage(
+                                  'https://img.freepik.com/free-photo/young-attractive-woman-smiling-feeling-healthy-hair-flying-wind_176420-37515.jpg?w=996&t=st=1661797413~exp=1661798013~hmac=d0c888f7ea5f3db7dc216b14d714cf88d393ba1adf8a245109b4dd15167284a6'),
+                              fit: BoxFit.cover,
+                              height: 220.0,
+                              width: double.infinity,
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Communicate with friends',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1!
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) =>
-                          buildPostItem(posts[index], context, index),
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 10.0,
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) =>
+                            buildPostItem(posts[index], context, index),
+                        separatorBuilder: (context, index) => const SizedBox(
+                          height: 10.0,
+                        ),
+                        itemCount: posts.length,
                       ),
-                      itemCount: posts.length,
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    )
-                  ],
-                ),
-              );
-            },
-            fallback: (context) {
-              if (SocialCubit.get(context).posts.isEmpty) {
-                return const Center(child: Text("No posts yet"));
-              } else {
+                      const SizedBox(
+                        height: 8,
+                      )
+                    ],
+                  ),
+                );
+              },
+              fallback: (context) {
                 return const Center(child: CircularProgressIndicator());
-              }
-            });
-      },
-    );
+              });
+        },
+      );
+    });
   }
 
 /*
