@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/bloc/cubit/cubit.dart';
 import 'package:social/bloc/cubit/states.dart';
 import 'package:social/models/message_model.dart';
 import 'package:social/models/user_model.dart';
+import 'package:social/modules/chats/widgets/full_screen_image.dart';
+import 'package:social/modules/chats/widgets/send_image_screen.dart';
+import 'package:social/shared/component.dart';
 import 'package:social/shared/icons.dart';
 
 // ignore: must_be_immutable
@@ -14,7 +19,7 @@ class ChatDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      SocialCubit.get(context).getMessages(receiverId: "${userModel.uId}");
+      SocialCubit.get(context).getTextMessages(receiverId: "${userModel.uId}");
       return BlocConsumer<SocialCubit, SocialStates>(
           builder: (context, state) {
             return Scaffold(
@@ -31,13 +36,7 @@ class ChatDetailsScreen extends StatelessWidget {
                     Text('${userModel.name}')
                   ]),
                 ),
-                body:
-                    //condition: SocialCubit.get(context).messages.length > 0,
-                    /*fallback: (context) {
-                    return const Center(child: CircularProgressIndicator());
-                  },*/
-
-                    Padding(
+                body: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
@@ -52,7 +51,23 @@ class ChatDetailsScreen extends StatelessWidget {
                                             .userModel!
                                             .uId ==
                                         message.senderId) {
-                                      return buildMyMessage(message);
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          message.text != null
+                                              ? buildMyMessage(message)
+                                              : const SizedBox(
+                                                  height: 1,
+                                                ),
+                                          message.image != null
+                                              ? buildImageMessage(
+                                                  context, message)
+                                              : const SizedBox(
+                                                  height: 1,
+                                                )
+                                        ],
+                                      );
                                     } else {
                                       return buildMessage(message);
                                     }
@@ -64,8 +79,7 @@ class ChatDetailsScreen extends StatelessWidget {
                                   },
                                   itemCount:
                                       SocialCubit.get(context).messages.length))
-                          : const Expanded(
-                              child: const Text("No messages yet")),
+                          : const Expanded(child: Text("No messages yet")),
                       Container(
                         clipBehavior: Clip.antiAliasWithSaveLayer,
                         decoration: BoxDecoration(
@@ -74,32 +88,45 @@ class ChatDetailsScreen extends StatelessWidget {
                                 color: Colors.grey.shade300, width: 1.0)),
                         child: Row(
                           children: [
+                            IconButton(
+                                onPressed: () async {
+                                  await SocialCubit.get(context)
+                                      .getmessageImage();
+                                  navigateTo(
+                                      context,
+                                      SendImageScreen(
+                                          receiverId: userModel.uId));
+                                },
+                                icon: const Icon(IconBroken.image)),
                             Expanded(
                               flex: 6,
                               child: TextFormField(
                                 controller: textController,
                                 decoration: const InputDecoration(
                                     contentPadding: EdgeInsets.all(10),
-                                    hintText: 'type your messages here...',
+                                    hintText: 'Type messages ...',
                                     border: InputBorder.none),
                               ),
                             ),
                             Expanded(
+                                flex: 1,
                                 child: Container(
-                              color: Colors.blue,
-                              child: IconButton(
-                                  onPressed: () {
-                                    SocialCubit.get(context).sendMessage(
-                                        text: textController.text,
-                                        receiverId: userModel.uId,
-                                        dateTime: DateTime.now().toString());
-                                    textController.clear();
-                                  },
-                                  icon: const Icon(
-                                    IconBroken.send,
-                                    color: Colors.white,
-                                  )),
-                            ))
+                                  color: Colors.blue,
+                                  child: IconButton(
+                                      onPressed: () {
+                                        SocialCubit.get(context)
+                                            .sendTextMessage(
+                                                text: textController.text,
+                                                receiverId: userModel.uId,
+                                                dateTime:
+                                                    DateTime.now().toString());
+                                        textController.clear();
+                                      },
+                                      icon: const Icon(
+                                        IconBroken.send,
+                                        color: Colors.white,
+                                      )),
+                                ))
                           ],
                         ),
                       )
@@ -130,6 +157,37 @@ class ChatDetailsScreen extends StatelessWidget {
         ),
         child: Text("${model.text}"),
       ),
+    );
+  }
+
+  Widget buildImageMessage(BuildContext context, MessageModel model) {
+    return Align(
+      alignment: AlignmentDirectional.topEnd,
+      child: InkWell(
+          onTap: () {
+            navigateTo(
+                context,
+                FullScreenImage(
+                  image: model.image,
+                ));
+          },
+          child: model.image != null
+              ? Container(
+                  height: 150,
+                  width: 200,
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blue),
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                          image: NetworkImage(model.image!),
+                          fit: BoxFit.cover)),
+                )
+              : Text('')),
     );
   }
 

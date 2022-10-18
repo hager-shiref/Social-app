@@ -331,18 +331,20 @@ class SocialCubit extends Cubit<SocialStates> {
       });
     }
   }
+//=======================================================================================================================================================
 
-  void sendMessage({
+  void sendTextMessage({
     required String? receiverId,
     required String? dateTime,
-    required String? text,
+    String? text,
+    String? image,
   }) {
     MessageModel model = MessageModel(
-      text: text,
-      senderId: userModel!.uId,
-      receiverId: receiverId,
-      dateTime: dateTime,
-    );
+        text: text,
+        senderId: userModel!.uId,
+        receiverId: receiverId,
+        dateTime: dateTime,
+        image: imageLink);
     // set my chats
     FirebaseFirestore.instance
         .collection('users')
@@ -372,7 +374,8 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   List<MessageModel> messages = [];
-  void getMessages({
+
+  void getTextMessages({
     required String receiverId,
   }) {
     FirebaseFirestore.instance
@@ -390,6 +393,47 @@ class SocialCubit extends Cubit<SocialStates> {
         messages.add(MessageModel.fromJson(element.data()));
       });
       emit(SocialGetMessageSuccessState());
+    });
+  }
+
+  File? messageImage;
+  var pickerMessage = ImagePicker();
+  Future<void> getmessageImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      print(pickedFile.name);
+      messageImage = File(pickedFile.path);
+      emit(SocialmessageImagePickedSuccessState());
+    } else {
+      if (kDebugMode) {
+        print('No image selected.');
+      }
+      emit(SocialmessageImagePickedErrorState());
+    }
+  }
+
+  String? imageLink;
+  void uploadMessageImage(
+      {required String dateTime, required String receiverId}) {
+    emit(SocialCreatePostLoadingState());
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child("messages/${Uri.file(messageImage!.path).pathSegments.last}")
+        .putFile(messageImage!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value) {
+        imageLink = value.toString();
+        sendTextMessage(
+            receiverId: receiverId,
+            dateTime: DateTime.now().toString(),
+            image: imageLink);
+      }).catchError((error) {
+        emit(SocialmessageImageUploadErrorState(error.toString()));
+        print("Error1 : ${error.toString()}");
+      });
+    }).catchError((error) {
+      emit(SocialmessageImageUploadErrorState(error.toString()));
+      print("Error2 : ${error.toString()}");
     });
   }
 

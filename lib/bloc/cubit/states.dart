@@ -106,10 +106,21 @@ class SocialSendMessageErrorState extends SocialStates {
   SocialSendMessageErrorState(this.error);
 }
 
-//get message
+//get text message
 
 class SocialGetMessageSuccessState extends SocialStates {}
 
+// image message
+class SocialmessageImagePickedSuccessState extends SocialStates {}
+
+class SocialmessageImagePickedErrorState extends SocialStates {}
+
+class SocialmessageImageUploadSuccessState extends SocialStates {}
+
+class SocialmessageImageUploadErrorState extends SocialStates {
+  final String error;
+  SocialmessageImageUploadErrorState(this.error);
+}
 //signOut
 
 class SocialUserSignOutSuccessState extends SocialStates {}
