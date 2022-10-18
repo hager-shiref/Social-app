@@ -80,7 +80,7 @@ class FeedsScreen extends StatelessWidget {
   }
 
 /*
-ocialCubit.get(context).posts.isNotEmpty &&
+SocialCubit.get(context).posts.isNotEmpty &&
                 SocialCubit.get(context).userModel != null
             ? SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -201,60 +201,8 @@ ocialCubit.get(context).posts.isNotEmpty &&
               "${model.text}",
               style: Theme.of(context).textTheme.subtitle1,
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0, top: 5.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: Wrap(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 5.0),
-                      child: SizedBox(
-                        height: 25.0,
-                        child: MaterialButton(
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          onPressed: () {},
-                          child: Text(
-                            '#Sky',
-                            style: TextStyle(color: defaultColor),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 5.0),
-                      child: SizedBox(
-                        height: 25.0,
-                        child: MaterialButton(
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          onPressed: () {},
-                          child: Text(
-                            '#BlueSky',
-                            style: TextStyle(color: defaultColor),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 5.0),
-                      child: SizedBox(
-                        height: 25.0,
-                        child: MaterialButton(
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          onPressed: () {},
-                          child: Text(
-                            '#BeautifulSky',
-                            style: TextStyle(color: defaultColor),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const SizedBox(
+              height: 10,
             ),
             if (model.postImage != '')
               Container(
@@ -264,7 +212,7 @@ ocialCubit.get(context).posts.isNotEmpty &&
                     borderRadius: BorderRadius.circular(5.0),
                     image: DecorationImage(
                         image: NetworkImage("${model.postImage}"),
-                        fit: BoxFit.cover)),
+                        fit: BoxFit.contain)),
               ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -359,7 +307,7 @@ ocialCubit.get(context).posts.isNotEmpty &&
                             postId: SocialCubit.get(context).postsId[index],
                             comment: commentController.text);
                         commentController.clear();
-                        SocialCubit.get(context).getPosts();
+                        //SocialCubit.get(context).getPosts();
                       },
                       icon: const Icon(
                         IconBroken.send,
