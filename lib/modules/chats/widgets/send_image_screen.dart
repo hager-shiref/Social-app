@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/bloc/cubit/states.dart';
 import 'package:social/shared/icons.dart';
-
 import '../../../bloc/cubit/cubit.dart';
 
 class SendImageScreen extends StatelessWidget {
@@ -14,9 +11,7 @@ class SendImageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
           body: Align(
@@ -58,6 +53,8 @@ class SendImageScreen extends StatelessWidget {
                                   dateTime: DateTime.now().toString(),
                                   receiverId: receiverId!);
                               Navigator.pop(context);
+                              SocialCubit.get(context).imageLink = null;
+                              SocialCubit.get(context).messageImage = null;
                             },
                           ),
                         ),

@@ -342,7 +342,7 @@ class SocialCubit extends Cubit<SocialStates> {
         senderId: userModel!.uId,
         receiverId: receiverId,
         dateTime: dateTime,
-        image: imageLink);
+        image: imageLink ?? null);
     // set my chats
     FirebaseFirestore.instance
         .collection('users')
@@ -425,6 +425,7 @@ class SocialCubit extends Cubit<SocialStates> {
             receiverId: receiverId,
             dateTime: DateTime.now().toString(),
             image: imageLink);
+        imageLink = null;
       }).catchError((error) {
         emit(SocialmessageImageUploadErrorState(error.toString()));
         print("Error1 : ${error.toString()}");
